@@ -1,0 +1,8 @@
+tencent:
+    access_key: x
+    access_secret: x
+    end_point: http://x.mns.us-east-1.aliyuncs.com/
+    queue: mdata-udc
+
+
+

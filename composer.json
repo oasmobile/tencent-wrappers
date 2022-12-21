@@ -1,5 +1,5 @@
 {
-  "name": "luguoit/tencent-wrappers",
+  "name": "oasis/tencent-wrappers",
   "description": "",
   "type": "library",
   "license": "MIT",
@@ -11,19 +11,21 @@
   ],
   "require": {
     "oasis/logging": "^1.4",
-    "oasis/flysystem-wrappers": "^1.2"
+    "oasis/flysystem-wrappers": "^1.2",
+    "oasis/aws-wrappers": "^2.11",
+    "qcloud/cos-sdk-v5": "^2.6"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.5"
   },
   "autoload": {
     "psr-4": {
-      "Oasis\\Mlib\\TecentWrappers\\": "src/Wrappers/"
+      "Oasis\\Mlib\\TencentWrappers\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Oasis\\Mlib\\AliyunWrappers\\Test\\": "ut/"
+      "Oasis\\Mlib\\TencentWrappers\\Test\\": "ut/"
     }
   }
 }
