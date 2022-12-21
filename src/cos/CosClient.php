@@ -1,5 +1,5 @@
 <?php
-namespace Oasis\UserDataCollector\Common\Tencent\Cos;
+namespace Oasis\Mlib\TencentWrappers\Cos;
 use Qcloud\Cos\Client;
 
 class CosClient extends Client

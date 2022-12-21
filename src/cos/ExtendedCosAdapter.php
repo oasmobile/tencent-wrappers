@@ -1,6 +1,6 @@
 <?php
 
-namespace Oasis\UserDataCollector\Common\Tencent\Cos;
+namespace Oasis\Mlib\TencentWrappers\Cos;
 
 use Exception;
 use League\Flysystem\Adapter\AbstractAdapter;
@@ -197,14 +197,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
         return true;
     }
 
-    /**
-     * Delete a directory.
-     *
-     * @param string @$dirname
-     *
-     * @return bool
-     * @throws OssException
-     */
+
     public function deleteDir($dirname)
     {
 
@@ -296,15 +289,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
         return compact('stream', 'path');
     }
 
-    /**
-     * List contents of a directory.
-     *
-     * @param string $directory
-     * @param bool $recursive
-     *
-     * @return array
-     * @throws OssException
-     */
+
     public function listContents($directory = '', $recursive = false)
     {
 
@@ -364,17 +349,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
         return $this->getMetadata($path);
     }
 
-    /**
-     * Get the signed download url of a file.
-     *
-     * @param string @$path
-     * @param int $expires
-     * @param string $host_name
-     * @param bool $use_ssl
-     *
-     * @return string
-     * @throws OssException
-     */
+
     public function getSignedDownloadUrl($path, $expires = 3600, $host_name = '', $use_ssl = false)
     {
 
@@ -447,7 +422,6 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
     /** @noinspection PhpUnusedParameterInspection */
     public function registerStreamWrapper($protocol = "s3")
     {
-
         throw new Exception("Not implement yet: registerStreamWrapper()");
     }
 }

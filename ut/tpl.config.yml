@@ -1,29 +1,8 @@
-mns:
+tencent:
     access_key: x
     access_secret: x
-    account_name: ''
     end_point: http://x.mns.us-east-1.aliyuncs.com/
-    topic: mdata-topic
-    queue: mdata-collect-failed
-    subject: /ut
-    bucket: mdata-export
-    oss_end_point: oss-us-east-1.aliyuncs.com
+    queue: mdata-udc
 
-
-
-
-aliyun:
-    access_key: x
-    access_secret: x
-    end_point: oss-us-east-1.aliyuncs.com
-    bucket: mdata-export
-    prefix: ut
-
-adb:
-    host: gp-x.gpdb.rds.aliyuncs.com
-    port: 3432
-    user: x
-    password: x
-    dbname: x
 
 
