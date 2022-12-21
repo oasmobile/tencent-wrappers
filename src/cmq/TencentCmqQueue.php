@@ -193,6 +193,7 @@ class TencentCmqQueue implements QueueInterface
             throw new InvalidArgumentException("Max count for queue message receiving is 10");
         }
 
+        $list=[];
         $messages = $this->queue->batch_receive_message($maxCount, $wait);
 
         foreach ($messages as $key => $msg) {
@@ -200,17 +201,21 @@ class TencentCmqQueue implements QueueInterface
             $body = json_decode($msg->getBody(), true);
             if ($body && isset($body[self::SERIALIZATION_FLAG]) && $body[self::SERIALIZATION_FLAG] = 'base64_serialize') {
 
-                $messages[$key]->msgBody = unserialize(base64_decode($body['body']));
+                $msg->msgBody = unserialize(base64_decode($body['body']));
             }
 
             if ($body && isset($body["cosBucket"])) {
                 $appid = $body["cosBucket"]["appid"];
                 $bucketName = $body["cosBucket"]["name"];
                 $key = $body["cosObject"]["key"];
-                $messages[$key]->url = str_replace("/$appid/$bucketName/", "", $key);
+                $body['url'] = str_replace("/$appid/$bucketName/", "", $key);
+                $msg->msgBody=json_encode($body);
             }
+
+            $list[]=$msg;
         }
-        return $messages;
+
+        return $list;
     }
 }
 
