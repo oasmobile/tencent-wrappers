@@ -1,8 +1,12 @@
 tencent:
     access_key: x
     access_secret: x
-    end_point: http://x.mns.us-east-1.aliyuncs.com/
-    queue: mdata-udc
+    end_point: https://cmq-use.public.tencenttdmq.com
+    queue: udc
+    region: na-ashburn
+    bucket: rawlog-test-1300994929
+
+
 
 
 
