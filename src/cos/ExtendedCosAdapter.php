@@ -43,10 +43,10 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
 
     /**
      *
-     * @param CosClient $client
+     * @param CosClient      $client
      * @param                $bucket
-     * @param null $prefix
-     * @param array $options
+     * @param null           $prefix
+     * @param array          $options
      */
     public function __construct(CosClient $client, $bucket, $prefix = null, array $options = [])
     {
@@ -80,17 +80,18 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
     /**
      * @param                          $path
      * @param                          $localFilePath
-     * @param Config $config
+     * @param Config                   $config
      *
      * @return array|false
      */
     public function putFile($path, $localFilePath, Config $config)
     {
-        $object = $this->applyPathPrefix($path);
+        $object  = $this->applyPathPrefix($path);
         $options = $this->getOptionsFromConfig();
-        $fh = fopen($localFilePath, "rb");
+        $fh      = fopen($localFilePath, "rb");
         $this->client->upload($this->bucket, $object, $fh, $options);
 
+        fclose($fh);
         $type = 'file';
         return compact('type', 'path');
     }
@@ -105,7 +106,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
     public function write($path, $contents, Config $config)
     {
 
-        $object = $this->applyPathPrefix($path);
+        $object  = $this->applyPathPrefix($path);
         $options = $this->getOptionsFromConfig();
 
 
@@ -161,7 +162,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
     public function copy($path, $newpath)
     {
 
-        $object = $this->applyPathPrefix($path);
+        $object    = $this->applyPathPrefix($path);
         $newobject = $this->applyPathPrefix($newpath);
 
         $this->client->copy(
@@ -170,7 +171,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
             [
                 "Bucket" => $this->bucket,
                 "Region" => $this->client->getRegion(),
-                "Key" => $object
+                "Key"    => $object
             ]
         );
 
@@ -191,7 +192,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
 
         $this->client->deleteObject([
             "Bucket" => $this->bucket,
-            "Key" => $object
+            "Key"    => $object
         ]);
 
         return true;
@@ -212,7 +213,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
 
         $this->client->deleteObjects(
             [
-                'Bucket' => $this->bucket,
+                'Bucket'  => $this->bucket,
                 'Objects' => $objects
             ]
         );
@@ -258,16 +259,19 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
      */
     public function read($path)
     {
-        $object = $this->applyPathPrefix($path);
-        $tmpFile = "/tmp/" . tmpfile() . getmypid();
+        $object    = $this->applyPathPrefix($path);
+        $handle    = tmpfile();
+        $resource  = stream_get_meta_data($handle);
+        $localFile = $resource['uri'];
+
         $this->client->getObject(
             [
                 'Bucket' => $this->bucket,
-                'Key' => $object,
-                'SaveAs' => $tmpFile
+                'Key'    => $object,
+                'SaveAs' => $localFile
             ]
         );
-        $contents = file_get_contents($tmpFile);
+        $contents = file_get_contents($localFile);
 
         return compact('contents', 'path');
     }
@@ -275,16 +279,19 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
     public function readStream($path)
     {
 
-        $object = $this->applyPathPrefix($path);
-        $tmpFile = "/tmp/" . tmpfile() . getmypid();
+        $object  = $this->applyPathPrefix($path);
+        $handle    = tmpfile();
+        $resource  = stream_get_meta_data($handle);
+        $localFile = $resource['uri'];
+
         $this->client->getObject(
             [
                 'Bucket' => $this->bucket,
-                'Key' => $object,
-                'SaveAs' => $tmpFile
+                'Key'    => $object,
+                'SaveAs' => $localFile
             ]
         );
-        $stream = fopen($tmpFile,"r");
+        $stream = fopen($localFile, "r");
 
         return compact('stream', 'path');
     }
@@ -354,7 +361,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
     {
 
         $object = $this->applyPathPrefix($path);
-        $url = $this->client->getPresignedUrl($this->bucket, $object, $expires);
+        $url    = $this->client->getPresignedUrl($this->bucket, $object, $expires);
 
         if (!empty($host_name) || $use_ssl) {
             $parse_url = parse_url($url);
@@ -407,7 +414,7 @@ class ExtendedCosAdapter extends AbstractAdapter implements FindableAdapterInter
             $protocol = $this->registerStreamWrapper(null);
         }
 
-        $path = sprintf(
+        $path   = sprintf(
             "%s://%s/%s",
             $protocol,
             $this->getBucket(),
